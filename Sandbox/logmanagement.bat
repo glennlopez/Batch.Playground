@@ -1,15 +1,23 @@
 @ECHO off
 SET appliance=PCT
 
-ECHO Use Log Management
-ECHO [1] Clear %appliance% usage logs.
-ECHO [2] Collect %appliance% usage logs.
+SET logName=CHANGETHIS.TXT
+SET logSource=%HOMEDRIVE%/
+SET copyToDir=%HOMEDRIVE%/
+
+
+TITLE %appliance% Uselog Management
+
+::ECHO Use Log Managements
+::ECHO [1] Clear %appliance% usage logs.
+::ECHO [2] Collect %appliance% usage logs.
 
 REM Clear logs
-ECHO 
+::ECHO 
 
 REM Collect logs
-ECHO 
+::ECHO 
 
-ECHO Script end!
+
+
 @PAUSE
