@@ -2,22 +2,18 @@
 SET appliance=PCT
 
 SET logName=CHANGETHIS.TXT
+SET emptyLogFile=CHANGETHIS.TXT
 SET logSource=%HOMEDRIVE%/
 SET copyToDir=%HOMEDRIVE%/
 
 
 TITLE %appliance% Uselog Management
 
-::ECHO Use Log Managements
-::ECHO [1] Clear %appliance% usage logs.
-::ECHO [2] Collect %appliance% usage logs.
+REM Copy and rename logSource log-file to copyToDir log-directory
 
-REM Clear logs
-::ECHO 
+REM Remove copyToDir log-file
 
-REM Collect logs
-::ECHO 
-
+REM Copy emptyLogFile to copyToDir
 
 
 @PAUSE
