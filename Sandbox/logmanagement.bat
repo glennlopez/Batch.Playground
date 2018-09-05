@@ -14,20 +14,19 @@ set Min=%dt:~10,2%
 set Sec=%dt:~12,2%
 set copyDateStamp=%YYYY%-%MM%-%DD%
 
-SET origLogName=usageLog.csv
-SET newLogName=%computername%.%copyDateStamp%.%appliance%.csv*
+SET origLogName=%appliance%usageLog.csv
+::SET newLogName=%computername%.%copyDateStamp%.%appliance%.csv*
 SET emptyLogFile=TODO.TXT
-::SET copyToDir=Z:\GitHub\Batch.Playground\Sandbox
-SET copyToDir="%homedrive%\%homepath%\Desktop\"
-
-:: %homedrive%\%homepath%\Desktop\%origLogName%
-:: Z:\GitHub\Batch.Playground\Sandbox\%origLogName%
-
+::SET copyToDir="%homedrive%\%homepath%\Desktop\"
+SET copyToDir=\\Pct-fs\c\PCTusageLog
 
 REM DEBUG--
 
 REM \\REMOTE FOLDER NAME WILL CHANGE
-xcopy "%homedrive%\%homepath%\Desktop\%origLogName%" %copyToDir%\%newLogName% /y /z /k /w
+::xcopy "%homedrive%\%homepath%\Desktop\%origLogName%" %copyToDir%\%newLogName% /y /z /k /w
+xcopy "\\10.100.1.103\c\Users\Instructor_03\Desktop\%origLogName%" %copyToDir%\IOS03.csv* /y /z /k /w
+xcopy "\\10.100.1.102\c\Users\Instructor_02\Desktop\%origLogName%" %copyToDir%\IOS02.csv* /y /z /k /w
+xcopy "\\10.100.1.100\c\Users\Instructor_01\Desktop\%origLogName%" %copyToDir%\IOS01.csv* /y /z /k /w
 
 REM DEBUG--
 
