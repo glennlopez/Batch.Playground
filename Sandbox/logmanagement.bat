@@ -2,45 +2,52 @@
 SET appliance=PCT
 TITLE %appliance% Uselog Management
 
-REM Timestamps for filename
+REM TIMESTAMP VARIABLES
 for /f "delims=" %%a in ('wmic OS Get localdatetime  ^| find "."') do set dt=%%a
-set datestamp=%dt:~0,8%
-set timestamp=%dt:~8,6%
-set YYYY=%dt:~0,4%
-set MM=%dt:~4,2%
-set DD=%dt:~6,2%
-set HH=%dt:~8,2%
-set Min=%dt:~10,2%
-set Sec=%dt:~12,2%
-set copyDateStamp=%YYYY%-%MM%-%DD%
+SET datestamp=%dt:~0,8%
+SET timestamp=%dt:~8,6%
+SET YYYY=%dt:~0,4%
+SET MM=%dt:~4,2%
+SET DD=%dt:~6,2%
+SET HH=%dt:~8,2%
+SET Min=%dt:~10,2%
+SET Sec=%dt:~12,2%
+SET copyDateStamp=%YYYY%-%MM%-%DD%
 
+REM FILENAMES
 SET origLogName=%appliance%usageLog.csv
-::SET newLogName=%computername%.%copyDateStamp%.%appliance%.csv*
-SET emptyLogFile=TODO.TXT
-::SET copyToDir="%homedrive%\%homepath%\Desktop\"
-SET copyToDir=\\Pct-fs\c\PCTusageLog
+SET emptyLogName=CHANGE THIS FILENAME
+SET masterLogName=MASTERLOG.%copyDateStamp%.%appliance%.csv
 
-REM DEBUG--
+REM DIRECTORIES
+SET masterLogDir=CHAGE THIS DIRECTORY
+SET emptyLogDir=CHANGE THIS DIRECTORY
+SET copyFromDir=c\Users\Instructor_03\Desktop
+SET copyToDir=\\pct-fs\C\logs\PCT
+SET archiveToDir=\\pct-fs\C\logs\ARCHIVES
 
-REM \\REMOTE FOLDER NAME WILL CHANGE
-::xcopy "%homedrive%\%homepath%\Desktop\%origLogName%" %copyToDir%\%newLogName% /y /z /k /w
-xcopy "\\10.100.1.103\c\Users\Instructor_03\Desktop\%origLogName%" %copyToDir%\IOS03.csv* /y /z /k /w
-xcopy "\\10.100.1.102\c\Users\Instructor_02\Desktop\%origLogName%" %copyToDir%\IOS02.csv* /y /z /k /w
-xcopy "\\10.100.1.100\c\Users\Instructor_01\Desktop\%origLogName%" %copyToDir%\IOS01.csv* /y /z /k /w
+REM COPY USELOG TO FILESERVER
+xcopy "\\10.100.1.103\%copyFromDir%\%origLogName%" %copyToDir%\IOS03.%copyDateStamp%.%appliance%.csv* /y /z /k
+xcopy "\\10.100.1.102\c\Users\Instructor_02\Desktop\%origLogName%" %copyToDir%\IOS02.%copyDateStamp%.%appliance%.csv* /y /z /k
+xcopy "\\10.100.1.100\c\Users\Instructor_01\Desktop\%origLogName%" %copyToDir%\IOS01.%copyDateStamp%.%appliance%.csv* /y /z /k
+xcopy "\\10.100.1.200\c\Users\Instructor_sd\Desktop\%origLogName%" %copyToDir%\SDAAR.%copyDateStamp%.%appliance%.csv* /y /z /k
 
-REM DEBUG--
+REM MERGE ALL USELOG TO FILESERVER AS %APPLIANCE%MASTERLOG.CSV
+copy %copyToDir%\IOS01.%copyDateStamp%.%appliance%.csv+%copyToDir%\IOS02.%copyDateStamp%.%appliance%.csv+%copyToDir%\IOS03.%copyDateStamp%.%appliance%.csv+%copyToDir%\SDAAR.%copyDateStamp%.%appliance%.csv %copyToDir%\%masterLogName%
+::TODO clean
 
-REM xcopy and rename logSource log-file to copyToDir log-directory
-REM + PCTUSELOG.2018-09-04.zip
-REM     - IOS01.2018-09-04.PCT.csv 
-REM     - IOS02.2018-09-04.PCT.csv 
-REM     - IOS03.2018-09-04.PCT.csv 
-REM     - SDARR.2018-09-04.PCT.csv 
 
-REM Remove %copyToDir% log-file
+
+REM Remove %copyToDir% log-file ???
 
 REM Ask user if they want to clean the logfile
-REM IF YES: Copy %emptyLogFile% to copyToDir
+REM IF YES: 
+
+REM ARCHIVE LOGS TO FILESERVER
+powershell.exe -command "& { Compress-Archive -Path %copyToDir%\* -CompressionLevel Optimal -DestinationPath %archiveToDir%\%appliance%.$(get-date -f yyy-MM-dd).zip; }"
+::TODO - Red warning when file already exists (make this quiet/not show up)
+
+REM Copy %emptyLogFile% to copyToDir
 
 
 @PAUSE
